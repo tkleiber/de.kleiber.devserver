@@ -71,4 +71,13 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get update
   #   sudo apt-get install -y apache2
   # SHELL
+  config.vm.provision "shell", inline: <<-SHELL
+    # enable repository to find docker
+	yum-config-manager --enable ol7_addons
+	sudo yum install docker
+  SHELL
+  
+  # install docker (does not work with Oracle Enterprise Linux 7.1)
+  # config.vm.provision "docker" do |d|
+  # end
 end
