@@ -1,15 +1,15 @@
-= My development server
+# My development server
 
 This is the repository for all blogs related to my virtual development server which you can find here:
 https://develishdevelopment.wordpress.com/tag/virtual-development-server/
 
-== Goals:
+## Goals:
 
 * virtual development server to decoupling development from my computer
 * testing some ideas and play with some new and old technologies
 * components should be easy replaceable and should influence my computer as little as possible
 
-== Planned features:
+## Planned features:
 
 * Vagrant as for creating and provisioning the virtual server
 * Oracle Enterprise Linux as operating system in the server and, when possible, in the docker containers
@@ -21,6 +21,4 @@ https://develishdevelopment.wordpress.com/tag/virtual-development-server/
  - Oracle Weblogic Server 12c
  - Oracle ADF Runtime 12c
  - etc.
-
-
 
