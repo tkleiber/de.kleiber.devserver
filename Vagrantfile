@@ -75,6 +75,8 @@ Vagrant.configure(2) do |config|
   # shell provider
   # format the additional disk and add the free space to the box
   config.vm.provision :shell, :path => "add_disk.sh"
+  # add swapfile to the box
+  config.vm.provision :shell, :path => "add_swap.sh"
 
   # Docker Private Registry container for storing later builded docker images, which are not in the Docker Public Registry at https://hub.docker.com/
   config.vm.provision "docker" do |d|
