@@ -4,11 +4,23 @@ Vagrant.configure(2) do |config|
   config.vm.box = "oraclelinux-7-x86_64.box"
   config.vm.box_url = "http://cloud.terry.im/vagrant/oraclelinux-7-x86_64.box"
 
+  # Port Forwardings for:
+  # - Oracle database port
+  config.vm.network "forwarded_port", guest: 1521, host: 1521
+  # - Docker Local Registry
+  config.vm.network "forwarded_port", guest: 5000, host: 5000
+  # - Oracle Enterprise Manager Express
+  config.vm.network "forwarded_port", guest: 5500, host: 5500
+  # Oracle Application Express (APEX)
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
+
   # Create a private network
   config.vm.network "private_network", type: "dhcp"
 
   # persistant storage for all docker container
   config.vm.synced_folder "C:\\shared\\virtual_storage", "/virtual_storage", :mount_options => ["dmode=777","fmode=777"]
+  # Oracle Docker Images installation path
+  config.vm.synced_folder "C:\\shared\\scmlocal\\docker-images", "/docker-images", :mount_options => ["dmode=777","fmode=777"]
   
   # virtualbox provider
   config.vm.provider "virtualbox" do |vb|
