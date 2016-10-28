@@ -5,13 +5,15 @@ Vagrant.configure(2) do |config|
   config.vm.box_url = "http://cloud.terry.im/vagrant/oraclelinux-7-x86_64.box"
 
   # Port Forwardings for:
+  # - Oracle Application Express (APEX)
+  config.vm.network "forwarded_port", guest: 80, host: 80
   # - Oracle database port
   config.vm.network "forwarded_port", guest: 1521, host: 1521
   # - Docker Local Registry
   config.vm.network "forwarded_port", guest: 5000, host: 5000
   # - Oracle Enterprise Manager Express
   config.vm.network "forwarded_port", guest: 5500, host: 5500
-  # Oracle Application Express (APEX)
+  # - Jenkins
   config.vm.network "forwarded_port", guest: 8080, host: 8080
 
   # Create a private network
@@ -89,10 +91,18 @@ Vagrant.configure(2) do |config|
   config.vm.provision :shell, :path => "add_disk.sh"
   # add swapfile to the box
   config.vm.provision :shell, :path => "add_swap.sh"
+  # configure docker 
+  config.vm.provision :shell, :path => "config_docker.sh"
+  # install jenkins 
+  config.vm.provision :shell, :path => "add_jenkins.sh"
 
   # Docker Private Registry container for storing later builded docker images, which are not in the Docker Public Registry at https://hub.docker.com/
   config.vm.provision "docker" do |d|
     d.run "registry", image: "registry", daemonize: true, args: "-d -p 5000:5000 -v /virtual_storage/docker_registry:/var/lib/registry"
   end
 
+  # Jenkins LTS
+  # config.vm.provision "docker" do |d|
+  #   d.run "jenkins", image: "jenkins", daemonize: true, args: "-d -p 80:8080 -p 50000:50000 -v /virtual_storage/jenkins_home:/var/jenkins_home"
+  # end
 end
