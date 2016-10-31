@@ -6,7 +6,7 @@ Vagrant.configure(2) do |config|
 
   # Port Forwardings for:
   # - Oracle Application Express (APEX)
-  config.vm.network "forwarded_port", guest: 80, host: 80
+  # config.vm.network "forwarded_port", guest: 80, host: 80
   # - Oracle database port
   config.vm.network "forwarded_port", guest: 1521, host: 1521
   # - Docker Local Registry
@@ -14,7 +14,7 @@ Vagrant.configure(2) do |config|
   # - Oracle Enterprise Manager Express
   config.vm.network "forwarded_port", guest: 5500, host: 5500
   # - Jenkins
-  config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 8080, host: 80
 
   # Create a private network
   config.vm.network "private_network", type: "dhcp"
@@ -23,6 +23,8 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "C:\\shared\\virtual_storage", "/virtual_storage", :mount_options => ["dmode=777","fmode=777"]
   # Oracle Docker Images installation path
   config.vm.synced_folder "C:\\shared\\scmlocal\\docker-images", "/docker-images", :mount_options => ["dmode=777","fmode=777"]
+  # persistant storage for jenkins
+  config.vm.synced_folder "C:\\shared\\virtual_storage\\jenkins_home", "/var/lib/jenkins", :mount_options => ["dmode=777","fmode=777"]
   
   # virtualbox provider
   config.vm.provider "virtualbox" do |vb|
