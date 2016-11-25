@@ -35,3 +35,6 @@ date > /etc/disk_added_date
 
 # show diskspace of the logical volume after adding the disk
 df -h /dev/mapper/linux-root
+
+# change timezone
+timedatectl set-timezone Europe/Berlin
