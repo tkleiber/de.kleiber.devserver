@@ -21,8 +21,6 @@ Vagrant.configure(2) do |config|
 
   # persistant storage for all docker container
   config.vm.synced_folder "C:\\shared\\virtual_storage", "/virtual_storage", :mount_options => ["dmode=777","fmode=777"]
-  # Oracle Docker Images installation path
-  config.vm.synced_folder "C:\\shared\\scmlocal\\docker-images", "/docker-images", :mount_options => ["dmode=777","fmode=777"]
   # persistant storage for jenkins
   config.vm.synced_folder "C:\\shared\\virtual_storage\\jenkins_home", "/var/lib/jenkins", type: "nfs", owner: 994, group: 992, create: true
   
