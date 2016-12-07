@@ -97,6 +97,8 @@ Vagrant.configure(2) do |config|
   config.vm.provision :shell, :path => "config_docker.sh"
   # install jenkins 
   config.vm.provision :shell, :path => "add_jenkins.sh"
+  # restart jenkins at each "vagrant up" to solve the problem, that virtualbox shared folders are mounted after start of services
+  config.vm.provision :shell, :inline => "sudo service jenkins restart", :run => "always"
 
   # Docker Private Registry container for storing later builded docker images, which are not in the Docker Public Registry at https://hub.docker.com/
   config.vm.provision "docker" do |d|
