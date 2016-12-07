@@ -19,10 +19,12 @@ Vagrant.configure(2) do |config|
   # Create a private network
   config.vm.network "private_network", type: "dhcp"
 
-  # persistant storage for all docker container
-  config.vm.synced_folder "C:\\shared\\virtual_storage", "/virtual_storage", :mount_options => ["dmode=777","fmode=777"]
+  # persistant storage for docker registry
+  config.vm.synced_folder "C:\\shared\\virtual_storage\\docker_registry", "/var/lib/registry", type: "nfs", owner: 994, group: 992, create: true
   # persistant storage for jenkins
   config.vm.synced_folder "C:\\shared\\virtual_storage\\jenkins_home", "/var/lib/jenkins", type: "nfs", owner: 994, group: 992, create: true
+  # persistant storage for software
+  config.vm.synced_folder "D:\\download", "/software", :mount_options => ["dmode=555","fmode=555"]
   
   # virtualbox provider
   config.vm.provider "virtualbox" do |vb|
@@ -98,11 +100,10 @@ Vagrant.configure(2) do |config|
 
   # Docker Private Registry container for storing later builded docker images, which are not in the Docker Public Registry at https://hub.docker.com/
   config.vm.provision "docker" do |d|
-    d.run "registry", image: "registry", daemonize: true, args: "-d -p 5000:5000 -v /virtual_storage/docker_registry:/var/lib/registry"
+    d.run "registry", image: "registry", daemonize: true, args: "-d -p 5000:5000 -v /var/lib/registry:/var/lib/registry"
   end
 
-  # Jenkins LTS
-  # config.vm.provision "docker" do |d|
-  #   d.run "jenkins", image: "jenkins", daemonize: true, args: "-d -p 80:8080 -p 50000:50000 -v /virtual_storage/jenkins_home:/var/jenkins_home"
-  # end
+  # restart jenkins and docker registry at each "vagrant up" to solve the problem, that virtualbox shared folders are mounted after start of services
+  config.vm.provision :shell, :inline => "sudo service jenkins restart; docker stop registry; docker start registry", :run => "always"
+
 end
