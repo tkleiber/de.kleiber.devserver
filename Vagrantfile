@@ -95,8 +95,11 @@ Vagrant.configure(2) do |config|
   config.vm.provision :shell, :path => "add_swap.sh"
   # configure docker 
   config.vm.provision :shell, :path => "config_docker.sh"
+  # add X11 libraries
+  config.vm.provision :shell, :path => "add_x11_libs.sh", :run => "always"
   # install jenkins 
   config.vm.provision :shell, :path => "add_jenkins.sh"
+
 
   # Docker Private Registry container for storing later builded docker images, which are not in the Docker Public Registry at https://hub.docker.com/
   config.vm.provision "docker" do |d|
