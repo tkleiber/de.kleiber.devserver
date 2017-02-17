@@ -96,7 +96,7 @@ Vagrant.configure(2) do |config|
   # configure docker 
   config.vm.provision :shell, :path => "config_docker.sh"
   # add X11 libraries
-  config.vm.provision :shell, :path => "add_x11_libs.sh", :run => "always"
+  config.vm.provision :shell, :path => "add_x11_libs.sh"
   # install jenkins 
   config.vm.provision :shell, :path => "add_jenkins.sh"
 
