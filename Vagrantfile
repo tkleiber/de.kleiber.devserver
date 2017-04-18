@@ -8,13 +8,13 @@ Vagrant.configure(2) do |config|
   # - Oracle Application Express (APEX)
   # config.vm.network "forwarded_port", guest: 80, host: 80
   # - Oracle database port
-  config.vm.network "forwarded_port", guest: 1521, host: 1521
+  config.vm.network "forwarded_port", guest: 1521, host: 1521, host_ip: "127.0.0.1"
   # - Docker Local Registry
-  config.vm.network "forwarded_port", guest: 5000, host: 5000
+  config.vm.network "forwarded_port", guest: 5000, host: 5000, host_ip: "127.0.0.1"
   # - Oracle Enterprise Manager Express
-  config.vm.network "forwarded_port", guest: 5500, host: 5500
+  config.vm.network "forwarded_port", guest: 5500, host: 5500, host_ip: "127.0.0.1"
   # - Jenkins
-  config.vm.network "forwarded_port", guest: 8080, host: 80
+  config.vm.network "forwarded_port", guest: 8080, host: 80, host_ip: "127.0.0.1"
 
   # Create a private network
   config.vm.network "private_network", type: "dhcp"
