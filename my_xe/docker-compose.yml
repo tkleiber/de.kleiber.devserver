@@ -1,0 +1,21 @@
+version: '2'
+services:
+  sqldeveloper:
+    image: localhost:5000/oracle/sqldeveloper:4.2.0
+    environment:
+      - DISPLAY=192.168.178.25:0.0
+      - ORACLE_PWD=vagrant
+    depends_on:
+      - "database"
+  database:
+    image: localhost:5000/oracle/database:11.2.0.2-xe
+    environment:
+      - ORACLE_PWD=vagrant
+    shm_size: 1g
+#    volumes:
+#      - /home/oracle/oradata:/opt/oracle/oradata # persistent oracle database data.
+    ports:
+      # - HOST_PORT:CONTAINER_PORT
+      - 1521:1521
+      - 80:8080
+      - 5500:5500
