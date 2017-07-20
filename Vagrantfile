@@ -1,8 +1,7 @@
 Vagrant.configure(2) do |config|
 
   # Use the mentioned ready OEL 7 linux box
-  config.vm.box = "oraclelinux-7-x86_64.box"
-  config.vm.box_url = "http://cloud.terry.im/vagrant/oraclelinux-7-x86_64.box"
+  config.vm.box = "centos/7"
 
   # Port Forwardings for:
   # - Oracle Application Express (APEX)
@@ -36,24 +35,16 @@ Vagrant.configure(2) do |config|
 
     # clone the original vmdk disk into a dynamic vdi disk, which only allocate the used space on the host
     if ARGV[0] == "up" && ! File.exist?("#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}.vdi")
-      # configure the SATA controller for second disk port, for other box you may have another controller
-      vb.customize [
-        "storagectl", :id,
-        "--name", "SATA",
-        "--controller", "IntelAHCI",
-        "--portcount", "1",
-        "--hostiocache", "on"
-      ]
       # clone the original disk, for other box you may have another disk name
       vb.customize [
-        "clonehd", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/box-disk002.vmdk",
+        "clonehd", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/centos-7-1-1.x86_64.vmdk",
              "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}.vdi",
         "--format", "VDI"
       ]
       # attach the cloned disk to the controller
       vb.customize [
         "storageattach", :id,
-        "--storagectl", "SATA",
+        "--storagectl", "IDE",
         "--port", "0",
         "--device", "0",
         "--type", "hdd",
@@ -62,7 +53,7 @@ Vagrant.configure(2) do |config|
       ]
       # delete the original disk to release it's space
       vb.customize [
-        "closemedium", "disk", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/box-disk002.vmdk",
+        "closemedium", "disk", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/centos-7-1-1.x86_64.vmdk",
         "--delete"
       ]
     end
@@ -79,7 +70,7 @@ Vagrant.configure(2) do |config|
       # attach the addtional disk to the controller
       vb.customize [
         "storageattach", :id,
-        "--storagectl", "SATA",
+        "--storagectl", "IDE",
         "--port", "1",
         "--device", 0,
         "--type", "hdd",
