@@ -6,7 +6,7 @@ Vagrant.configure(2) do |config|
 
   # Port Forwardings for:
   # - Oracle Application Express (APEX)
-  # config.vm.network "forwarded_port", guest: 80, host: 80
+  config.vm.network "forwarded_port", guest: 80, host: 80, host_ip: "127.0.0.1"
   # - Oracle database port
   config.vm.network "forwarded_port", guest: 1521, host: 1521, host_ip: "127.0.0.1"
   # - Docker Local Registry
@@ -14,7 +14,7 @@ Vagrant.configure(2) do |config|
   # - Oracle Enterprise Manager Express
   config.vm.network "forwarded_port", guest: 5500, host: 5500, host_ip: "127.0.0.1"
   # - Jenkins
-  config.vm.network "forwarded_port", guest: 8080, host: 80, host_ip: "127.0.0.1"
+  config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
 
   # Create a private network
   config.vm.network "private_network", type: "dhcp"
@@ -31,38 +31,38 @@ Vagrant.configure(2) do |config|
     # name in VirtualBox
     vb.name = "Development Server"
 
-    # configure 16 GB memory 
+    # configure 16 GB memory
     vb.customize ["modifyvm", :id, "--memory", "16384"]
 
     # clone the original vmdk disk into a dynamic vdi disk, which only allocate the used space on the host
     if ARGV[0] == "up" && ! File.exist?("#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}.vdi")
       # configure the SATA controller for second disk port, for other box you may have another controller
       vb.customize [
-        "storagectl", :id, 
-        "--name", "SATA", 
-        "--controller", "IntelAHCI", 
-        "--portcount", "1", 
+        "storagectl", :id,
+        "--name", "SATA",
+        "--controller", "IntelAHCI",
+        "--portcount", "1",
         "--hostiocache", "on"
       ]
       # clone the original disk, for other box you may have another disk name
       vb.customize [
-        "clonehd", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/box-disk2.vmdk", 
-             "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}.vdi", 
+        "clonehd", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/box-disk002.vmdk",
+             "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}.vdi",
         "--format", "VDI"
       ]
       # attach the cloned disk to the controller
       vb.customize [
-        "storageattach", :id, 
-        "--storagectl", "SATA", 
-        "--port", "0", 
-        "--device", "0", 
+        "storageattach", :id,
+        "--storagectl", "SATA",
+        "--port", "0",
+        "--device", "0",
         "--type", "hdd",
         "--nonrotational", "on",
-        "--medium", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}.vdi" 
+        "--medium", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}.vdi"
       ]
       # delete the original disk to release it's space
       vb.customize [
-        "closemedium", "disk", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/box-disk2.vmdk", 
+        "closemedium", "disk", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/box-disk002.vmdk",
         "--delete"
       ]
     end
@@ -71,17 +71,17 @@ Vagrant.configure(2) do |config|
     if !File.exist?("#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_docker.vdi")
       # create addtional big dynamic vdi (200 GB)
       vb.customize [
-        "createhd", 
-        "--filename", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_docker.vdi", 
-        "--format", "VDI", 
+        "createhd",
+        "--filename", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_docker.vdi",
+        "--format", "VDI",
         "--size", 200 * 1024
-      ] 
+      ]
       # attach the addtional disk to the controller
       vb.customize [
-        "storageattach", :id, 
-        "--storagectl", "SATA", 
-        "--port", "1", 
-        "--device", 0, 
+        "storageattach", :id,
+        "--storagectl", "SATA",
+        "--port", "1",
+        "--device", 0,
         "--type", "hdd",
         "--medium", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_docker.vdi"
       ]
@@ -93,11 +93,11 @@ Vagrant.configure(2) do |config|
   config.vm.provision :shell, :path => "add_disk.sh"
   # add swapfile to the box
   config.vm.provision :shell, :path => "add_swap.sh"
-  # configure docker 
+  # configure docker
   config.vm.provision :shell, :path => "config_docker.sh"
   # add X11 libraries
   config.vm.provision :shell, :path => "add_x11_libs.sh"
-  # install jenkins 
+  # install jenkins
   config.vm.provision :shell, :path => "add_jenkins.sh"
 
 
