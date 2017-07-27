@@ -24,7 +24,7 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "C:\\shared\\virtual_storage\\jenkins_home", "/var/lib/jenkins", type: "nfs", owner: 994, group: 992, create: true
   # persistant storage for software
   config.vm.synced_folder "D:\\download", "/software", :mount_options => ["dmode=555","fmode=555"]
-  
+
   # virtualbox provider
   config.vm.provider "virtualbox" do |vb|
     # name in VirtualBox
