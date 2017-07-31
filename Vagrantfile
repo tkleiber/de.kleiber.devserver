@@ -1,7 +1,7 @@
 Vagrant.configure(2) do |config|
 
   # Use the mentioned ready OEL 7 linux box
-  config.vm.box = "centos/7"
+  config.vm.box = "wholebits/ubuntu17.04-64"
 
   # Port Forwardings for:
   # - Oracle Application Express (APEX)
@@ -33,27 +33,60 @@ Vagrant.configure(2) do |config|
     # configure 16 GB memory
     vb.customize ["modifyvm", :id, "--memory", "16384"]
 
+=begin
+
     # clone the original vmdk disk into a dynamic vdi disk, which only allocate the used space on the host
-    if ARGV[0] == "up" && ! File.exist?("#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}.vdi")
+    if ARGV[0] == "up" && ! File.exist?("#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_1.vdi")
+      # configure the SATA controller for 3 disk ports, for other box you may have another controller
+      vb.customize [
+        "storagectl", :id,
+        "--name", "SATA Controller",
+        "--controller", "IntelAHCI",
+        "--portcount", "1"
+      ]
+
       # clone the original disk, for other box you may have another disk name
       vb.customize [
-        "clonehd", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/centos-7-1-1.x86_64.vmdk",
-             "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}.vdi",
+        "clonehd", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/ubuntu17.04-64-disk001.vmdk",
+             "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_1.vdi",
         "--format", "VDI"
       ]
       # attach the cloned disk to the controller
       vb.customize [
         "storageattach", :id,
-        "--storagectl", "IDE",
+        "--storagectl", "SATA Controller",
         "--port", "0",
         "--device", "0",
         "--type", "hdd",
-        "--nonrotational", "on",
-        "--medium", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}.vdi"
+        "--medium", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_1.vdi"
       ]
       # delete the original disk to release it's space
       vb.customize [
-        "closemedium", "disk", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/centos-7-1-1.x86_64.vmdk",
+        "closemedium", "disk", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/ubuntu17.04-64-disk001.vmdk",
+        "--delete"
+      ]
+    end
+
+    # clone the original vmdk disk into a dynamic vdi disk, which only allocate the used space on the host
+    if ARGV[0] == "up" && ! File.exist?("#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_2.vdi")
+      # clone the original disk, for other box you may have another disk name
+      vb.customize [
+        "clonehd", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/ubuntu17.04-64-disk002.vmdk",
+             "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_2.vdi",
+        "--format", "VDI"
+      ]
+      # attach the cloned disk to the controller
+      vb.customize [
+        "storageattach", :id,
+        "--storagectl", "SATA Controller",
+        "--port", "1",
+        "--device", "0",
+        "--type", "hdd",
+        "--medium", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_2.vdi"
+      ]
+      # delete the original disk to release it's space
+      vb.customize [
+        "closemedium", "disk", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/ubuntu17.04-64-disk002.vmdk",
         "--delete"
       ]
     end
@@ -70,24 +103,25 @@ Vagrant.configure(2) do |config|
       # attach the addtional disk to the controller
       vb.customize [
         "storageattach", :id,
-        "--storagectl", "IDE",
-        "--port", "1",
+        "--storagectl", "SATA Controller",
+        "--port", "2",
         "--device", 0,
         "--type", "hdd",
         "--medium", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_docker.vdi"
       ]
     end
+=end
   end
 
   # shell provider
   # format the additional disk and add the free space to the box
-  config.vm.provision :shell, :path => "add_disk.sh"
+  # config.vm.provision :shell, :path => "add_disk.sh"
   # add swapfile to the box
   config.vm.provision :shell, :path => "add_swap.sh"
   # configure docker
-  config.vm.provision :shell, :path => "config_docker.sh"
+  # config.vm.provision :shell, :path => "config_docker.sh"
   # add X11 libraries
-  config.vm.provision :shell, :path => "add_x11_libs.sh"
+  # config.vm.provision :shell, :path => "add_x11_libs.sh"
   # install jenkins
   config.vm.provision :shell, :path => "add_jenkins.sh"
 

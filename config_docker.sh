@@ -1,11 +1,5 @@
 #!/bin/sh
-#echo Install Kernel 4
-#sudo rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
-#sudo rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm
-#sudo yum install yum-plugin-fastestmirror
-#sudo uname -r
-#sudo yum -y --enablerepo=elrepo-kernel install kernel-ml
-#sudo uname -r
+
 echo install docker compose
 sudo curl -L https://github.com/docker/compose/releases/download/1.15.0-rc1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
