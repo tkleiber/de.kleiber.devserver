@@ -32,19 +32,13 @@ Vagrant.configure(2) do |config|
 
     # configure 16 GB memory
     vb.customize ["modifyvm", :id, "--memory", "16384"]
+    vb.customize ["modifyvm", :id, "--cpus", "4"]
+    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "80"]
 
 =begin
 
     # clone the original vmdk disk into a dynamic vdi disk, which only allocate the used space on the host
     if ARGV[0] == "up" && ! File.exist?("#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_1.vdi")
-      # configure the SATA controller for 3 disk ports, for other box you may have another controller
-      vb.customize [
-        "storagectl", :id,
-        "--name", "SATA Controller",
-        "--controller", "IntelAHCI",
-        "--portcount", "1"
-      ]
-
       # clone the original disk, for other box you may have another disk name
       vb.customize [
         "clonehd", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/ubuntu17.04-64-disk001.vmdk",
@@ -90,9 +84,18 @@ Vagrant.configure(2) do |config|
         "--delete"
       ]
     end
+=end
 
     # create addtional big dynamic vdi disk for docker images
     if !File.exist?("#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_docker.vdi")
+      # configure the SATA controller for 3 disk ports, for other box you may have another controller
+      vb.customize [
+        "storagectl", :id,
+        "--name", "SATA Controller",
+        "--controller", "IntelAHCI",
+        "--portcount", "1"
+      ]
+
       # create addtional big dynamic vdi (200 GB)
       vb.customize [
         "createhd",
@@ -100,6 +103,7 @@ Vagrant.configure(2) do |config|
         "--format", "VDI",
         "--size", 200 * 1024
       ]
+
       # attach the addtional disk to the controller
       vb.customize [
         "storageattach", :id,
@@ -110,7 +114,7 @@ Vagrant.configure(2) do |config|
         "--medium", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_docker.vdi"
       ]
     end
-=end
+
   end
 
   # shell provider
