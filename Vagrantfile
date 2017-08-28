@@ -22,10 +22,10 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "C:\\shared\\virtual_storage\\docker_registry", "/var/lib/registry", type: "nfs", owner: 994, group: 992, create: true
   # persistant storage for jenkins
   config.vm.synced_folder "C:\\shared\\virtual_storage\\jenkins_home", "/var/lib/jenkins", type: "nfs", owner: 994, group: 992, create: true
+  # persistant storage for oracle
+  config.vm.synced_folder "C:\\shared\\virtual_storage\\oracle", "/var/lib/oracle", type: "nfs", owner: 994, group: 992, create: true
   # persistant storage for software
   config.vm.synced_folder "D:\\download", "/software", :mount_options => ["dmode=555","fmode=555"]
-  # persistant storage for software
-  config.vm.synced_folder "C:\\shared\\scmlocal", "/scmlocal", :mount_options => ["dmode=555","fmode=555"]
 
   # virtualbox provider
   config.vm.provider "virtualbox" do |vb|
@@ -125,7 +125,7 @@ Vagrant.configure(2) do |config|
   # add swapfile to the box
   config.vm.provision :shell, :path => "add_swap.sh"
   # configure docker
-  config.vm.provision :shell, :path => "config_docker.sh"
+  # config.vm.provision :shell, :path => "config_docker.sh"
   # add X11 libraries
   # config.vm.provision :shell, :path => "add_x11_libs.sh"
   # install jenkins
