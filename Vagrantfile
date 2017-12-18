@@ -1,8 +1,10 @@
 Vagrant.configure(2) do |config|
 
-  # Use the mentioned ready OEL 7 linux box
-  config.vm.box = "wholebits/ubuntu17.04-64"
-
+  # Use an ubuntu box with vagrant user preinstalled as
+  # - OEL reqires docker ee
+  # - official https://app.vagrantup.com/ubuntu/boxes/ does not have vagrant user
+  config.vm.box = "mrlesmithjr/zesty64"
+  
   # Port Forwardings for:
   # - Oracle Application Express (APEX)
   config.vm.network "forwarded_port", guest: 80, host: 80, host_ip: "127.0.0.1"
@@ -23,7 +25,7 @@ Vagrant.configure(2) do |config|
   # persistant storage for jenkins
   config.vm.synced_folder "C:\\shared\\virtual_storage\\jenkins_home", "/var/lib/jenkins", type: "nfs", owner: 994, group: 992, create: true
   # persistant storage for oracle
-  config.vm.synced_folder "C:\\shared\\virtual_storage\\oracle", "/var/lib/oracle", type: "nfs", owner: 994, group: 992, create: true
+  config.vm.synced_folder "C:\\shared\\virtual_storage\\oracle", "/var/lib/oracle", type: "nfs", owner: 1000, group: 1000, create: true
   # persistant storage for software
   config.vm.synced_folder "D:\\download", "/software", :mount_options => ["dmode=555","fmode=555"]
 
@@ -37,67 +39,16 @@ Vagrant.configure(2) do |config|
     vb.customize ["modifyvm", :id, "--cpus", "4"]
     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "80"]
 
-=begin
-
-    # clone the original vmdk disk into a dynamic vdi disk, which only allocate the used space on the host
-    if ARGV[0] == "up" && ! File.exist?("#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_1.vdi")
-      # clone the original disk, for other box you may have another disk name
-      vb.customize [
-        "clonehd", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/ubuntu17.04-64-disk001.vmdk",
-             "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_1.vdi",
-        "--format", "VDI"
-      ]
-      # attach the cloned disk to the controller
-      vb.customize [
-        "storageattach", :id,
-        "--storagectl", "SATA Controller",
-        "--port", "0",
-        "--device", "0",
-        "--type", "hdd",
-        "--medium", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_1.vdi"
-      ]
-      # delete the original disk to release it's space
-      vb.customize [
-        "closemedium", "disk", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/ubuntu17.04-64-disk001.vmdk",
-        "--delete"
-      ]
-    end
-
-    # clone the original vmdk disk into a dynamic vdi disk, which only allocate the used space on the host
-    if ARGV[0] == "up" && ! File.exist?("#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_2.vdi")
-      # clone the original disk, for other box you may have another disk name
-      vb.customize [
-        "clonehd", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/ubuntu17.04-64-disk002.vmdk",
-             "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_2.vdi",
-        "--format", "VDI"
-      ]
-      # attach the cloned disk to the controller
-      vb.customize [
-        "storageattach", :id,
-        "--storagectl", "SATA Controller",
-        "--port", "1",
-        "--device", "0",
-        "--type", "hdd",
-        "--medium", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_2.vdi"
-      ]
-      # delete the original disk to release it's space
-      vb.customize [
-        "closemedium", "disk", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/ubuntu17.04-64-disk002.vmdk",
-        "--delete"
-      ]
-    end
-=end
-
     # create addtional big dynamic vdi disk for docker images
+=begin
     if !File.exist?("#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_docker.vdi")
       # configure the SATA controller for 3 disk ports, for other box you may have another controller
       vb.customize [
         "storagectl", :id,
         "--name", "SATA Controller",
         "--controller", "IntelAHCI",
-        "--portcount", "1"
+        "--portcount", "2"
       ]
-
       # create addtional big dynamic vdi (200 GB)
       vb.customize [
         "createhd",
@@ -116,9 +67,8 @@ Vagrant.configure(2) do |config|
         "--medium", "#{ENV["HOME"]}/VirtualBox VMs/#{vb.name}/#{vb.name}_docker.vdi"
       ]
     end
-
+=end
   end
-
   # shell provider
   # format the additional disk and add the free space to the box
   # config.vm.provision :shell, :path => "add_disk.sh"
@@ -130,7 +80,6 @@ Vagrant.configure(2) do |config|
   # config.vm.provision :shell, :path => "add_x11_libs.sh"
   # install jenkins
   config.vm.provision :shell, :path => "add_jenkins.sh"
-
 
   # Docker Private Registry container for storing later builded docker images, which are not in the Docker Public Registry at https://hub.docker.com/
   config.vm.provision "docker" do |d|
