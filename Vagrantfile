@@ -3,7 +3,8 @@ Vagrant.configure(2) do |config|
   # Use an ubuntu box with vagrant user preinstalled as
   # - OEL reqires docker ee
   # - official https://app.vagrantup.com/ubuntu/boxes/ does not have vagrant user
-  config.vm.box = "mrlesmithjr/zesty64"
+  config.vm.box = "ubuntu-17.10.1-amd64-virtualbox.box"
+  config.vm.box_url = "file:///C:/shared/scmlocal/de.kleiber.devserver/packer/ubuntu-17.10.1-amd64-virtualbox.box"
 
   # Port Forwardings for:
   # - Oracle Application Express (APEX)
@@ -75,20 +76,20 @@ Vagrant.configure(2) do |config|
   # format the additional disk and add the free space to the box
   # config.vm.provision :shell, :path => "add_disk.sh"
   # add swapfile to the box
-  config.vm.provision :shell, :path => "add_swap.sh"
+  # config.vm.provision :shell, :path => "add_swap.sh"
   # configure docker
   # config.vm.provision :shell, :path => "config_docker.sh"
   # add X11 libraries
   # config.vm.provision :shell, :path => "add_x11_libs.sh"
   # install jenkins
-  config.vm.provision :shell, :path => "add_jenkins.sh"
+  # config.vm.provision :shell, :path => "add_jenkins.sh"
 
   # Docker Private Registry container for storing later builded docker images, which are not in the Docker Public Registry at https://hub.docker.com/
-  config.vm.provision "docker" do |d|
-    d.run "registry", image: "registry", daemonize: true, args: "-d -p 5000:5000 -v /var/lib/registry:/var/lib/registry"
-  end
+  # config.vm.provision "docker" do |d|
+  #   d.run "registry", image: "registry", daemonize: true, args: "-d -p 5000:5000 -v /var/lib/registry:/var/lib/registry"
+  # end
 
   # restart jenkins and docker registry at each "vagrant up" to solve the problem, that virtualbox shared folders are mounted after start of services
-  config.vm.provision :shell, :inline => "sudo service jenkins restart; docker stop registry; docker start registry", :run => "always"
+  # config.vm.provision :shell, :inline => "sudo service jenkins restart; docker stop registry; docker start registry", :run => "always"
 
 end
