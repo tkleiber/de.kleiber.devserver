@@ -13,7 +13,10 @@ This is the repository for all blogs related to my virtual development server wh
 
 ```
 cd packer
-packer build packer\ubuntu.json
+packer build ubuntu.json
+cd ..
+vagrant box remove ubuntu-17.10.1-amd64-virtualbox.box
+vagrant up
 ```
 
 ## Planned features:
