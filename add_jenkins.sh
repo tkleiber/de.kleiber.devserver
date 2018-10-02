@@ -1,12 +1,12 @@
-sudo yum -y install java
-sudo yum -y install screen
-sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
-sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
-sudo yum -y install jenkins
-sudo sed -i -e 's/JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true"/JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true -Dmail.smtp.starttls.enable=true"/g' /etc/sysconfig/jenkins
-sudo service jenkins start
-#sudo echo "# Start on mount" | sudo tee /etc/udev/rules.d/90-vagrant-mount.rules > /dev/null
-#sudo echo "SUBSYSTEM==\"bdi\",ACTION==\"add\",RUN+=\"/usr/bin/screen -m -d bash -c 'sleep 5;/usr/sbin/service jenkins start'\"" | sudo tee --append /etc/udev/rules.d/90-vagrant-mount.rules > /dev/null
-#sudo echo "# Stop on unmount" | sudo tee --append /etc/udev/rules.d/90-vagrant-mount.rules > /dev/null
-#sudo echo "SUBSYSTEM==\"bdi\",ACTION==\"remove\",RUN+=\"/usr/bin/screen -m -d bash -c 'sleep 5;/usr/sbin/service jenkins stop'\"" | sudo tee --append /etc/udev/rules.d/90-vagrant-mount.rules > /dev/null
-#sudo chmod 644 /etc/udev/rules.d/90-vagrant-mount.rules
+#!/bin/sh
+echo Config Jenkins
+sudo apt-get update
+sudo apt-get -y install screen
+sudo apt-get -y install wget
+sudo apt-get -y install openjdk-8-jre
+sudo wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt-get update
+sudo apt-get -y install jenkins
+sudo apt-get -y install git
+sudo sed -i -e 's/JAVA_ARGS="-Djava.awt.headless=true"/JAVA_ARGS="-Djava.awt.headless=true -Dmail.smtp.starttls.enable=true"/g' /etc/default/jenkins

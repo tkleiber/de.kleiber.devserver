@@ -1,10 +1,16 @@
 #!/bin/sh
-echo create docker config
-sudo mkdir /etc/systemd/system/docker.service.d
-sudo touch /etc/systemd/system/docker.service.d/docker.conf
-echo '[Service]' | sudo tee /etc/systemd/system/docker.service.d/docker.conf > /dev/null
-echo 'ExecStart=' | sudo tee --append /etc/systemd/system/docker.service.d/docker.conf > /dev/null
-# Enable Docker Remote API, Insecure Registry, set Basesize
-echo 'ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock --insecure-registry=localhost:5000 --storage-opt=dm.basesize=50G' | sudo tee --append /etc/systemd/system/docker.service.d/docker.conf > /dev/null
-echo flush config changes
-sudo systemctl daemon-reload
+echo Config Docker
+sudo apt-get update
+sudo apt-get -y install apt-transport-https
+sudo apt-get -y install ca-certificates
+sudo apt-get -y install software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+sudo apt-get -y install docker-ce
+# sudo su
+sudo curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo usermod -aG docker vagrant
+exit

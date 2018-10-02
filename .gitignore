@@ -1,1 +1,3 @@
 .vagrant/
+packer/packer_cache/3f76b057bd03bb5c372569d2fb331bbe375942d0e54f8fef7bb4099f525bca2f.iso
+packer/*.box
