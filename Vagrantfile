@@ -3,7 +3,7 @@ Vagrant.configure(2) do |config|
   # Use an packer created ubuntu box with vagrant user preinstalled as
   # - OEL reqires docker ee
   # - official https://app.vagrantup.com/ubuntu/boxes/ does not have vagrant user
-  config.vm.box = "ubuntu-17.10.1-amd64"
+  config.vm.box = "ubuntu-17.10-amd64"
 
   # Port Forwardings for:
   # - Oracle Application Express (APEX)
