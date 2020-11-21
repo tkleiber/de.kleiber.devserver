@@ -75,3 +75,6 @@ fabric.properties
 
 # Ignore Vagrant VM-specific state store
 .vagrant/
+
+# Ignore sonarlint results
+/.idea/sonarlint/
