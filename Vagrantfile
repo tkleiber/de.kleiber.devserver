@@ -3,8 +3,7 @@ Vagrant.configure(2) do |config|
   # use an packer created ubuntu box with vagrant user preinstalled as
   # - OEL requires docker ee
   # - official https://app.vagrantup.com/ubuntu/boxes/ does not have vagrant user
-  # - because of error when in docker installation in 20.04 we use 19.10 https://github.com/docker/for-linux/issues/833
-  config.vm.box = "bento/ubuntu-19.10"
+  config.vm.box = "bento/ubuntu-20.10"
 
   # port forwarding for:
   # docker local registry
