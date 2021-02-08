@@ -1,0 +1,82 @@
+@startuml
+
+skinparam defaultTextAlignment center
+
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.2.0
+!includeurl ICONURL/dev2/oracle.puml
+
+!include <tupadr3/common>
+!include <tupadr3/font-awesome-5/server>
+!include <tupadr3/font-awesome/cloud>
+
+!include <tupadr3/devicons/docker>
+!include <tupadr3/devicons/linux>
+
+!include <tupadr3/devicons2/ubuntu_wordmark>
+!include <tupadr3/devicons2/vagrant_wordmark>
+node "Architecture" as a {
+node "Container / Images" as c {
+  DEV_DOCKER(build_app_1, Infrastructure Build, node) {
+    node "Infrastructure\nCI" as build_ci_1
+    node "Infrastructure\nRegistry" as build_depl_1
+    build_ci_1 -[hidden]right- build_depl_1
+  }
+  build_ci_1 ---> ci
+
+  DEV_DOCKER(adf_app_1, ADF App1, node) {
+    node "ADF\nCI" as adf_ci_1
+    node "ADF\nDeployment" as adf_depl_1
+    adf_ci_1 -[hidden]right- adf_depl_1
+  }
+  adf_depl_1 ---> adf
+  adf_ci_1 ---> ci
+
+  DEV_DOCKER(fr_app_1, FR App1, node) {
+    node "ADF\nCI" as fr_ci_1
+    node "ADF\nDeployment" as fr_depl_1
+    fr_ci_1 -[hidden]right- fr_depl_1
+  }
+  fr_depl_1 ---> fr
+  fr_ci_1 ---> ci
+
+  DEV_DOCKER(ci, CI Image, node) {
+    node "Jenkins\nController" as ci_jc
+    node "Jenkins\nAgents" as aja
+    node "Sonarcube" as ajs
+    ci_jc --> aja
+    aja --> ajs
+  }
+
+  DEV_DOCKER(adf, ADF Image, node) {
+    node "WebLogic" as adf_wl
+    node "Datenbank" as adf_db
+    adf_wl --> adf_db
+  }
+  ci -[hidden]right- adf
+
+  DEV_DOCKER(fr, F&R Image, node) {
+    node "WebLogic" as fr_wl
+    node "Datenbank" as fr_db
+    fr_wl --> fr_db
+  }
+  adf -[hidden]right- fr
+}
+node "Infrastructure" as i {
+  node "Virtualization" as v {
+    DEV_DOCKER(vdc, Docker\nCompose, node)
+    DEV_DOCKER(vd, Docker, node)
+    vdc -> vd
+  }
+  DEV_LINUX(infra,Server,node) {
+    DEV2_UBUNTU_WORDMARK(ivb, Virtual Box\n(Local), node) {
+    }
+    DEV2_ORACLE(ioci, Oracle Compute Instance\n(Cloud), cloud) {
+    }
+  }
+    v ..down.> ivb
+    v ..down.> ioci
+}
+c -------> i
+}
+
+@enduml
