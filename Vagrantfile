@@ -39,7 +39,7 @@ Vagrant.configure(2) do |config|
     # so I configure the network jenkins via docker.post_install_provision after the docker installation
     docker.post_install_provision "shell", inline:"docker network create jenkins"
     docker.run "jenkins-docker", image: "docker:dind", args: "--detach --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume /var/jenkins_home:/var/jenkins_home --publish 2376:2376"
-    docker.run "jenkins-blueocean", image: "jenkinsci/blueocean", args: "--detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume /var/jenkins_home:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro"
+    docker.run "jenkins-blueocean", image: "jenkinsci/blueocean", args: "--detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume /var/jenkins_home:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro --volume /scmlocal:/scmlocal"
     # docker private registry container for storing later built docker images
     docker.run "registry", image: "registry", daemonize: true, args: "--detach --publish 5000:5000 --volume /var/lib/registry:/var/lib/registry"
   end
