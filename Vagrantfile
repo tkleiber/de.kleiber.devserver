@@ -19,7 +19,7 @@ Vagrant.configure(2) do |config|
   # persistant storage for jenkins
   config.vm.synced_folder "C:\\shared\\virtual_storage\\jenkins_home", "/var/jenkins_home", create: true
   # persistant storage for software
-  config.vm.synced_folder "D:\\download", "/software", :mount_options => ["dmode=555","fmode=555"]
+  config.vm.synced_folder "C:\\download", "/software", :mount_options => ["dmode=555","fmode=555"]
   # persistant storage for projects
   config.vm.synced_folder "C:\\shared\\scmlocal", "/scmlocal", create: true
 
