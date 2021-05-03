@@ -1,0 +1,19 @@
+= 2. Use arc42 for documenting architecture
+
+Date: 2021-05-03
+
+== Status
+
+Accepted
+
+== Context
+
+We need to structure the architecture of our development server
+
+== Decision
+
+In the standard source directory of Asciidoctor Maven Plugin of the project we generate the default english https://arc42.de/[Arc42] template via https://doctoolchain.github.io/docToolchain/v1.3.x/#_initialize_directory_for_documents[Doctoolchain].
+
+== Consequences
+
+We use the default structure of the arc42 template.
