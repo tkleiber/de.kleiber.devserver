@@ -6,7 +6,6 @@
 == initial ideas
 
 . Use C4 Model for diagrams
-. Use Arc42 for documentation
 . Describe only components which are realy needed for all types of Developments.
 .. host OS
 .. try Docker as wrapping environment
@@ -18,4 +17,5 @@
 ... gradle for doctoolchain
 ... Vagrantfile https://www.jetbrains.com/help/idea/vagrant.html (UC)
 ... bash scripts https://plugins.jetbrains.com/plugin/4230-bashsupport
+
 
