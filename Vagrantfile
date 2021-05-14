@@ -24,7 +24,7 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "C:\\shared\\scmlocal", "/scmlocal", create: true
 
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "Development Server"
+    vb.name = "DevelopmentServer"
     vb.customize ["modifyvm", :id, "--memory", "16384"]
     vb.customize ["modifyvm", :id, "--cpus", "4"]
     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "80"]
