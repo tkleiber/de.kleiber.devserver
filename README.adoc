@@ -9,15 +9,26 @@ https://develishdevelopment.wordpress.com/tag/virtual-development-server/
 * testing some ideas and play with some new and old technologies
 * components should be easy replaceable and should influence my computer as little as possible
 
-== Run Virtual Box via Vagrant as Base for Local Development
+== Create and Start Virtual Box via Vagrant as Base for Local Development
 
+[source,bash]
 ----
 vagrant up
+vagrant destroy
 ----
+
+== Create and Start Compute Instance in Oracle Cloud via Terraform for Remote Development
+
+[source,bash]
+----
+terraform apply -auto-approve
+terraform destroy -auto-approve
+----
+
+
 
 == Planned features:
 
-* Run Compute Instance in Oracle Cloud via Terraform for Remote Deployment
 * Both should be based on same OS
 * Docker containers for decoupling of technologies and components
 ** Jenkins for orchestrating the build and delivering process
