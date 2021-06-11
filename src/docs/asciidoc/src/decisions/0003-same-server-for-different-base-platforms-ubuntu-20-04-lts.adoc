@@ -1,0 +1,24 @@
+= 3. Same Server for different Base Platforms: Ubuntu 20.04 LTS
+
+Date: 2021-05-03
+
+== Status
+
+Accepted
+
+== Context
+
+The Development Server should be combined from different Docker images. The Docker daemon must be run on different base platforms, the installation should be as similar as possible.
+
+== Decision
+
+At the time of this definition Ubuntu 20.04 LTS is available for:
+
+* https://app.vagrantup.com/bento/boxes/ubuntu-20.04[Vagrant]
+* https://docs.oracle.com/de-de/iaas/Content/Compute/References/images.htm[Oracle Cloud Infrastructure (OCI) Compute Instance]
+* https://www.microsoft.com/de-de/p/ubuntu-2004-lts/9n6svws3rx71?activetab=pivot:overviewtab[Windows Store App for WLS 2]
+* Docker Desktop
+
+== Consequences
+
+We will further work on the different platforms with Ubuntu 20.04 LTS.

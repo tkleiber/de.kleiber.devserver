@@ -1,0 +1,9 @@
+[[section-design-decisions]]
+== Design Decisions
+
+include::decisions/0001-record-architecture-decisions.adoc[leveloffset=+1]
+
+include::decisions/0002-use-arc42-for-documenting-architecture.adoc[leveloffset=+1]
+
+include::decisions/0003-same-server-for-different-base-platforms-ubuntu-20-04-lts.adoc[leveloffset=+1]
+
