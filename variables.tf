@@ -14,7 +14,7 @@ variable "compartment_desc" { type = string }
 
 # Virtual Cloud Network
 variable "vcn_display_name" { type = string }
-variable "vcn_cidr" {
+variable "vcn_cidr_block" {
   type    = string
   default = "10.0.0.0/16"
 }
@@ -25,6 +25,9 @@ variable "subnet_cidr_block" {
   type    = string
   default = "10.0.0.0/24"
 }
+
+# Internet Gateway
+variable "ig_display_name" { type = string }
 
 # Compute Instance
 variable "shape" { type = string }

@@ -23,9 +23,9 @@ vagrant destroy
 ----
 terraform apply -auto-approve
 terraform destroy -auto-approve
+terraform init -upgrade
+tail -F /var/log/cloud-init-output.log
 ----
-
-
 
 == Planned features:
 
