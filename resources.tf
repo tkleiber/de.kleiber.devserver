@@ -158,7 +158,10 @@ resource oci_core_instance tf_oci_core_instance {
     # YAML does only work embedded in data template_file like in
     # https://gist.github.com/scross01/5a66207fdc731dd99869a91461e9e2b8
     # so instead work with bash shell here
-    user_data = base64encode(file("bootstrap.sh"))
+    user_data = base64encode(templatefile("bootstrap.sh", {
+      jenkins_user = var.jenkins_user
+      jenkins_password = var.jenkins_password
+    }))
   }
   preserve_boot_volume = false
   shape_config {

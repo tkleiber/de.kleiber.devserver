@@ -33,3 +33,6 @@ variable "ig_display_name" { type = string }
 variable "shape" { type = string }
 variable "source_id" { type = string }
 
+# Jenkins
+variable "jenkins_user" { type = string }
+variable "jenkins_password" { type = string }

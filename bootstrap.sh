@@ -38,7 +38,7 @@ sudo docker run \
   docker:dind \
   --storage-driver overlay2
 sudo docker run \
-  --name jenkins-blueocean \
+  --name jenkins-jcasc \
   --detach \
   --network jenkins \
   --env DOCKER_HOST=tcp://docker:2376 \
@@ -48,5 +48,7 @@ sudo docker run \
   --publish 50000:50000 \
   --volume jenkins-data:/var/jenkins_home \
   --volume jenkins-docker-certs:/certs/client:ro \
-  jenkinsci/blueocean
+  --env JENKINS_ADMIN_ID="${jenkins_user}" \
+  --env JENKINS_ADMIN_PASSWORD="${jenkins_password}" \
+  tkleiber/jenkins:jcasc
 
