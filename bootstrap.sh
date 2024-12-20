@@ -1,4 +1,12 @@
 #!/bin/bash
+if [ -n "${1}" ]; then jenkins_user="${1}"; fi
+if [ -n "${2}" ]; then jenkins_password="${2}"; fi
+echo ########################
+echo "${1}"
+echo "${2}"
+echo "${jenkins_user}"
+echo "${jenkins_password}"
+echo ########################
 ### Install Docker Engine on Ubuntu ###
 # https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
 # - Update the apt package index and install packages to allow apt to use a repository over HTTPS:
@@ -25,8 +33,8 @@ sudo systemctl enable docker
 # https://www.jenkins.io/doc/book/installing/docker/
 sudo docker network create jenkins
 sudo docker run \
+  --restart unless-stopped \
   --name jenkins-docker \
-  --rm \
   --detach \
   --privileged \
   --network jenkins \
@@ -35,9 +43,11 @@ sudo docker run \
   --volume jenkins-docker-certs:/certs/client \
   --volume jenkins-data:/var/jenkins_home \
   --publish 2376:2376 \
+  --restart unless-stopped \
   docker:dind \
   --storage-driver overlay2
 sudo docker run \
+  --restart unless-stopped \
   --name jenkins-jcasc \
   --detach \
   --network jenkins \
