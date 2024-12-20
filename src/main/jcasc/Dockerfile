@@ -8,5 +8,6 @@ COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 # change to default synced folder run this with
 # cd /vagrant
-# docker build -t myjenkins .
+# export DOCKER_BUILDKIT=1
+# docker build --progress=plain --tag myjenkins .
 # docker run -p 8070:8080 --rm --name myjenkins myjenkins:latest
