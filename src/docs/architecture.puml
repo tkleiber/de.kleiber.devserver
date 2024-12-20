@@ -7,18 +7,22 @@ skinparam defaultTextAlignment center
 !includeurl ICONURL/devicons2/docker.puml
 !includeurl ICONURL/devicons2/oracle_original.puml
 !includeurl ICONURL/devicons2/ubuntu_wordmark.puml
-!includeurl ICONURL/devicons2/vagrant_wordmark.puml
+!includeurl ICONURL/devicons2/windows8_original.puml
+!include <cloudogu/tools/docker.puml>
+!include <cloudogu/tools/terraform.puml>
+!include <cloudogu/tools/terraform.puml>
+!include <tupadr3/devicons2/vagrant_wordmark.puml>
 
 node "Architecture" as a {
 node "Container / Images" as c {
-  DEV2_DOCKER(build_app_1, Infrastructure Build, node) {
+  TOOL_DOCKER(build_app_1, Infrastructure Build, node) {
     node "Infrastructure\nCI" as build_ci_1
     node "Infrastructure\nRegistry" as build_depl_1
     build_ci_1 -[hidden]right- build_depl_1
   }
   build_ci_1 ---> ci
 
-  DEV2_DOCKER(adf_app_1, ADF App1, node) {
+  TOOL_DOCKER(adf_app_1, ADF App1, node) {
     node "ADF\nCI" as adf_ci_1
     node "ADF\nDeployment" as adf_depl_1
     adf_ci_1 -[hidden]right- adf_depl_1
@@ -26,7 +30,7 @@ node "Container / Images" as c {
   adf_depl_1 ---> adf
   adf_ci_1 ---> ci
 
-  DEV2_DOCKER(fr_app_1, FR App1, node) {
+  TOOL_DOCKER(fr_app_1, FR App1, node) {
     node "ADF\nCI" as fr_ci_1
     node "ADF\nDeployment" as fr_depl_1
     fr_ci_1 -[hidden]right- fr_depl_1
@@ -34,7 +38,7 @@ node "Container / Images" as c {
   fr_depl_1 ---> fr
   fr_ci_1 ---> ci
 
-  DEV2_DOCKER(ci, CI Image, node) {
+  TOOL_DOCKER(ci, CI Image, node) {
     node "Jenkins\nController" as ci_jc
     node "Jenkins\nAgents" as aja
     node "Sonarcube" as ajs
@@ -42,14 +46,14 @@ node "Container / Images" as c {
     aja --> ajs
   }
 
-  DEV2_DOCKER(adf, ADF Image, node) {
+  TOOL_DOCKER(adf, ADF Image, node) {
     node "WebLogic" as adf_wl
     node "Datenbank" as adf_db
     adf_wl --> adf_db
   }
   ci -[hidden]right- adf
 
-  DEV2_DOCKER(fr, F&R Image, node) {
+  TOOL_DOCKER(fr, F&R Image, node) {
     node "WebLogic" as fr_wl
     node "Datenbank" as fr_db
     fr_wl --> fr_db
@@ -57,22 +61,32 @@ node "Container / Images" as c {
   adf -[hidden]right- fr
 }
 node "Infrastructure" as i {
-  node "Virtualization" as v {
-    DEV2_DOCKER(vdc, Docker\nCompose, node)
-    DEV2_DOCKER(vd, Docker, node)
-    vdc -> vd
-  }
-  DEV2_UBUNTU_WORDMARK(infra,Server,node) {
-    DEV2_VAGRANT_WORDMARK(ivb, Virtual Box\n(Local), node) {
-    }
-    DEV2_DOCKER(idw, Docker for Windows\n(Local), node) {
-    }
-    DEV2_ORACLE_ORIGINAL(ioci, Oracle Compute Instance\n(Cloud), cloud) {
+  TOOL_DOCKER(dc, Docker\nCompose, node)
+  TOOL_TERRAFORM(ioci,Terraform) {
+    DEV2_ORACLE_ORIGINAL(oci, Oracle Compute Instance\n(Cloud), cloud) {
+      DEV2_UBUNTU_WORDMARK(ociubuntu, Server) {
+        TOOL_DOCKER(ocidockerce, Docker CE) {
+        }
+      }
     }
   }
-    v ..down.> ivb
-    v ..down.> idw
-    v ..down.> ioci
+
+  DEV2_WINDOWS8_ORIGINAL(idw) {
+    TOOL_DOCKER(wdd, Docker Desktop\n(Local)) {
+    }
+  }
+
+  DEV2_VAGRANT_WORDMARK(ivb) {
+    DEV2_ORACLE_ORIGINAL(vbox, Virtual Box) {
+      DEV2_UBUNTU_WORDMARK(vboxubuntu, Server) {
+        TOOL_DOCKER(vboxdockerce, Docker CE) {
+        }
+      }
+    }
+  }
+  dc ..down.> ocidockerce
+  dc ..down.> wdd
+  dc ..down.> vboxdockerce
 }
 c -------> i
 }
