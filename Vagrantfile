@@ -1,5 +1,11 @@
 Vagrant.configure(2) do |config|
 
+  config.vbguest.auto_update = true
+  # Usage: for provisioning set environment
+  # set JENKINS_USER=<jenkins_user>
+  # set JENKINS_PASSWORD=<jenkins_password>
+  # vagrant up
+
   # use an packer created ubuntu box with vagrant user preinstalled as
   # - OEL requires docker ee
   # - official https://app.vagrantup.com/ubuntu/boxes/ does not have vagrant user
@@ -10,6 +16,9 @@ Vagrant.configure(2) do |config|
   # jenkins
   config.vm.network "forwarded_port", guest: 8080, host: 8080
 
+  # persistant storage for projects
+  config.vm.synced_folder "C:\\shared\\scmlocal", "/scmlocal", create: true
+
   config.vm.provider "virtualbox" do |vb|
     vb.name = "DevelopmentServer"
     vb.customize ["modifyvm", :id, "--memory", "16384"]
@@ -17,5 +26,9 @@ Vagrant.configure(2) do |config|
     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "80"]
   end
 
-  config.vm.provision "shell", path: "bootstrap.sh"
+  config.vm.provision "shell"  do |s|
+    s.path = "bootstrap.sh"
+    # s.inline = "echo $1 $2"
+    s.args = [ENV['JENKINS_USER'], ENV['JENKINS_PASSWORD']]
+  end
 end
