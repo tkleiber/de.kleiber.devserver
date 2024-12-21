@@ -37,3 +37,16 @@ tail -F /var/log/cloud-init-output.log
 ** Oracle Weblogic Server 12c
 ** Oracle ADF Runtime 12c
 ** etc.
+
+== Open Issues
+
+* Parameters for bootstrap.sh from Vagrant
+* Scripts and Documentation for Docker for Windows
+* https -> LetsEncrypt?
+* Registry Server
++
+[source,bash]
+----
+docker run --restart unless-stopped --name registry --detach --network jenkins --publish 5000:5000 --volume C:\shared\virtual_storage\docker_registry:/var/lib/registry registry
+----
+
